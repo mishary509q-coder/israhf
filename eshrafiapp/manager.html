@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة المدير - إشرافي</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-left"><strong>إشرافي</strong></div>
+    <div class="nav-right">
+      <button onclick="toggleDarkMode()">🌙</button>
+      <button onclick="logout()">🔓 تسجيل الخروج</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2 id="welcome">مرحبًا، مدير المدرسة 👋</h2>
+
+    <label>عرض البيانات حسب:</label>
+    <select id="period">
+      <option value="day">اليوم</option>
+      <option value="week">أسبوع</option>
+      <option value="month">شهر</option>
+    </select>
+
+    <div class="stats-row">
+      <div class="stat-box">👨‍🎓 عدد الطلاب: <strong>320</strong></div>
+      <div class="stat-box">📉 الغياب اليوم: <strong>18</strong></div>
+      <div class="stat-box">⏰ المتأخرين: <strong>6</strong></div>
+      <div class="stat-box">✅ نسبة الانضباط: <strong>94%</strong></div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h3>📊 الغياب حسب الفصول</h3>
+        <canvas id="classChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>📅 الغياب حسب الأيام</h3>
+        <canvas id="dayChart"></canvas>
+      </div>
+    </div>
+
+    <h3>📋 جدول الغياب اليومي</h3>
+    <table class="absence-table">
+      <thead>
+        <tr>
+          <th>اسم الطالب</th>
+          <th>الفصل</th>
+          <th>الحالة</th>
+          <th>ملاحظة المعلم</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>سارة خالد</td>
+          <td>الثاني</td>
+          <td class="status-absent">❌ غائب</td>
+          <td>لم تحضر الحصة الأولى</td>
+        </tr>
+        <tr>
+          <td>نواف علي</td>
+          <td>الأول</td>
+          <td class="status-late">🟡 متأخر</td>
+          <td>وصل بعد الطابور</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.getElementById("welcome").textContent = localStorage.getItem("managerName") || "مرحبًا، مدير المدرسة 👋";
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function toggleLanguage() {
+      const currentLang = document.documentElement.lang;
+      if (currentLang === "ar") {
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        alert("Language switched to English 🌐");
+      } else {
+        document.documentElement.lang = "ar";
+        document.documentElement.dir = "rtl";
+        alert("تم تغيير اللغة إلى العربية 🌐");
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    new Chart(document.getElementById('classChart'), {
+      type: 'bar',
+      data: {
+        labels: ['الأول', 'الثاني', 'الثالث'],
+        datasets: [{
+          label: 'عدد الغياب',
+          data: [8, 6, 4],
+          backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: 'الغياب حسب الفصول' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('dayChart'), {
+      type: 'bar',
+      data: {
+        labels: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'],
+        datasets: [{
+          label: 'عدد الغياب',
+          data: [3, 5, 4, 2, 4],
+          backgroundColor: '#4bc0c0'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: 'الغياب حسب الأيام' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

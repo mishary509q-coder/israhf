@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل الدخول - إشرافي</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ✅ الشريط العلوي -->
+  <div class="navbar">
+    <div class="nav-left">
+      <strong>إشرافي</strong>
+    </div>
+    <div class="nav-right">
+      <button onclick="toggleDarkMode()">🌙</button>
+      <button id="logoutBtn" onclick="logout()">🔓 تسجيل الخروج</button>
+    </div>
+  </div>
+
+  <!-- ✅ نموذج تسجيل الدخول -->
+  <div class="login-container">
+    <img src="logo.png" alt="شعار المدرسة" class="logo">
+    <h2>تسجيل الدخول إلى إشرافي</h2>
+
+    <input type="text" id="username" placeholder="اسم المستخدم">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button onclick="login()">دخول</button>
+    <p id="status" class="status-message"></p>
+  </div>
+
+  <script>
+    const users = {
+      "teacher": { role: "teacher", password: "1234" },
+      "agent": { role: "agent", password: "4321" },
+      "admin": { role: "manager", password: "9999" }
+    };
+
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const status = document.getElementById("status");
+
+      if (users[user] && users[user].password === pass) {
+        const role = users[user].role;
+        localStorage.setItem("userName", user);
+
+        if (role === "teacher") {
+          localStorage.setItem("teacherName", "أستاذ " + user);
+          window.location.href = "dashboard.html";
+        } else if (role === "agent") {
+          localStorage.setItem("agentName", "وكيل " + user);
+          window.location.href = "agent.html";
+        } else if (role === "manager") {
+          localStorage.setItem("managerName", "مدير " + user);
+          window.location.href = "manager.html";
+        }
+      } else {
+        status.textContent = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function toggleLanguage() {
+      const currentLang = document.documentElement.lang;
+      if (currentLang === "ar") {
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        alert("Language switched to English 🌐");
+      } else {
+        document.documentElement.lang = "ar";
+        document.documentElement.dir = "rtl";
+        alert("تم تغيير اللغة إلى العربية 🌐");
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    // إخفاء زر تسجيل الخروج في الصفحة الرئيسية
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) logoutBtn.style.display = "none";
+    });
+  </script>
+</body>
+</html>
